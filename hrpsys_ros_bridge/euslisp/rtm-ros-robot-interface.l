@@ -2167,6 +2167,56 @@
     ))
   )
 
+;;  VirtualForceSensorService
+(def-set-get-param-method
+  'hrpsys_ros_bridge::Openhrp_VirtualForceSensorService_vsParam
+  :set-vs-param :get-vs-param :get-vs-param-arguments
+  :virtualforcesensorservice_setparameter :virtualforcesensorservice_getparameter)
+
+(defmethod rtm-ros-robot-interface
+  (:remove-external-force-offset
+   (&key ((:time tm) 8.0))
+   "remove offsets on outputs from external force/torque .
+    Please keep the robot static and make sure that robot's non-sensor surface do not contact with any objects.
+    Argument:
+      time is duration of calibration[s]. 8.0[s] by default.
+    Return:
+      t if set successfully, nil otherwise"
+   (send self :virtualforcesensorservice_removeexternalforceoffset
+         :tm tm))
+  (:remove-virtual-force-sensor-offset
+   (&key (names) ((:time tm) 8.0))
+   "remove offsets on sensor outputs form virtual force/torque sensors.
+    Please keep the robot static and make sure that robot's sensors do not contact with any objects.
+    Argument:
+      names is list of sensor names to be calibrated.
+      If not specified, all sensors are calibrated by default.
+      time is duration of calibration[s]. 8.0[s] by default.
+    Return:
+      t if set successfully, nil otherwise"
+   (send self :virtualforcesensorservice_removevirtualforcesensoroffset
+         :sensornames names
+         :tm tm))
+  (:start-virtual-force-sensor
+   (&key (name))
+   "start virtual force sensor estimation
+    Argument:
+      name of sensor to start
+    Return:
+      t if set successfully, nil otherwise"
+   (send self :virtualforcesensorservice_startestimation
+         :sensorname name))
+  (:stop-virtual-force-sensor
+   (&key (name))
+   "stop virtual force sensor estimation
+    Argument:
+      name of sensor to start
+    Return:
+      t if set successfully, nil otherwise"
+   (send self :virtualforcesensorservice_stopestimation
+         :sensorname name))
+  )
+
 (defmethod rtm-ros-robot-interface
   (:print-rtc-param-all
    ()
