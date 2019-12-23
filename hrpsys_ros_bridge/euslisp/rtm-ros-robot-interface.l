@@ -537,7 +537,7 @@
          &key
          (sequence-length (length jpos))
          (joint-length (length (car jpos)))
-         (fsensor-length (length (send robot :force-sensors))) ;; "fsensor length = ee length" is assumed
+         (fsensor-length (length (send robot :force-sensors)))
          (vel (make-list sequence-length :initial-element (instantiate float-vector joint-length)))
          (torque (make-list sequence-length :initial-element (instantiate float-vector joint-length)))
          (root-coords (make-list sequence-length :initial-element (make-coords)))

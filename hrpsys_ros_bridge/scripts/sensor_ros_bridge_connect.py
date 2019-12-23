@@ -25,7 +25,7 @@ def connecSensorRosBridgePort(url, rh, bridge, vs, rmfo, sh, es, rfu, subscripti
                 print program_name, "connect ", sen.name, rh.port(sen.name).get_port_profile().name, bridge.port(sen.name).get_port_profile().name
                 connectPorts(rh.port(sen.name), bridge.port(sen.name), subscription_type, rate=push_rate, pushpolicy=push_policy)
                 if sen.type == 'Force' and rmfo != None:
-                    print program_name, "connect ", sen.name, rmfo.port("off_" + sen.name).get_port_profile().name, bridge.port("off_" + sen.name).get_port_profile().name
+                    print program_name, "connect ", sen.name, rmfo.port("off_" + sen.name).get_port_profile().name, " to ", bridge.port("off_" + sen.name).get_port_profile().name
                     connectPorts(rmfo.port("off_" + sen.name), bridge.port("off_" + sen.name), subscription_type, rate=push_rate, pushpolicy=push_policy) # for abs forces
                 if sen.type == 'Force' and bridge.port("ref_" + sen.name): # for reference forces
                     if rfu != None and rfu.port("ref_"+sen.name+"Out"):
@@ -40,10 +40,12 @@ def connecSensorRosBridgePort(url, rh, bridge, vs, rmfo, sh, es, rfu, subscripti
         else:
             continue
     if vs != None:
-        for vfp in filter(lambda x : str.find(x, 'v') >= 0 and str.find(x, 'sensor') >= 0, vs.ports.keys()):
-            print program_name, "connect ", vfp, vs.port(vfp).get_port_profile().name, bridge.port(vfp).get_port_profile().name
+        for vfp in filter(lambda x : str.find(x, 'v') >= 0 and str.find(x, 'sensor') >= 0 and str.find(x, 'off_') < 0, vs.ports.keys()):
+            print program_name, "connect ", vfp, vs.port(vfp).get_port_profile().name, " to ", bridge.port(vfp).get_port_profile().name
             connectPorts(vs.port(vfp), bridge.port(vfp), subscription_type, rate=push_rate, pushpolicy=push_policy)
-            print program_name, "connect ", vfp, sh.port(vfp+"Out").get_port_profile().name, bridge.port("ref_"+vfp).get_port_profile().name
+            print program_name, "connect ", vfp, vs.port("off_" + vfp).get_port_profile().name, " to ", bridge.port("off_" + vfp).get_port_profile().name
+            connectPorts(vs.port("off_" + vfp), bridge.port("off_" + vfp), subscription_type, rate=push_rate, pushpolicy=push_policy) # for abs forces
+            print program_name, "connect ", vfp, sh.port(vfp+"Out").get_port_profile().name, " to ", bridge.port("ref_"+vfp).get_port_profile().name
             connectPorts(sh.port(vfp+"Out"), bridge.port("ref_" + vfp), subscription_type, rate=push_rate, pushpolicy=push_policy) # for reference forces
 
 def initSensorRosBridgeConnection(url, simulator_name, rosbridge_name, managerhost, subscription_type, push_policy, push_rate):

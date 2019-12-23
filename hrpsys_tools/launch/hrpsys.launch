@@ -31,7 +31,7 @@
   <arg name="USE_CHOREONOID" default="false" />
   <arg name="REALTIME" default="false" />
   <arg name="GUI" default="true" />
-  <arg name="DEBUG_HRPSYS" default="false" />
+  <arg name="DEBUG_HRPSYS" default="true" />
   <arg unless="$(arg DEBUG_HRPSYS)" name="RTCD_LAUNCH_PREFIX" default="" />
   <arg     if="$(arg DEBUG_HRPSYS)" name="RTCD_LAUNCH_PREFIX"
            default='xterm -e gdb -iex "set height 0" -ex run --args' /> <!-- for debugging with gdb -->
